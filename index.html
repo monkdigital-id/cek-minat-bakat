@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cek Minat Bakat</title>
+<meta name="description" content="Kenali minat dan bakat anak, remaja, atau diri sendiri berdasarkan 8 jenis kecerdasan (teori Kecerdasan Majemuk Howard Gardner). Pilih usia, jawab 24 pernyataan, dan dapatkan saran cara mengasahnya beserta rujukan akademik.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito+Sans:wght@400;600;700&display=swap">
+<style>
+:root{
+  --bg:#eef4f2; --surface:#ffffff; --ink:#1d2f2b; --muted:#5b6f6a; --line:#d3e1dc;
+  --accent:#2b7a6b; --accent-soft:#dcefea; --good:#2f8f5b; --warn:#c98a12; --alert:#c4523a;
+  --bar-muted:#a9c6bf;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --body:"Nunito Sans","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:16px; line-height:1.55; padding:20px 16px 32px}
+.wrap{max-width:640px; margin:0 auto; display:flex; flex-direction:column; gap:18px}
+header{display:flex; flex-direction:column; gap:6px}
+.eyebrow{font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--accent)}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(26px,6vw,36px); line-height:1.1; margin:0}
+.lead{margin:0; color:var(--muted)}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:22px; display:flex; flex-direction:column; gap:16px}
+.progress{display:flex; align-items:center; gap:12px; font-size:13px; color:var(--muted); font-variant-numeric:tabular-nums}
+.bar{flex:1; height:8px; background:var(--accent-soft); border-radius:99px; overflow:hidden}
+.bar span{display:block; height:100%; background:var(--accent); border-radius:99px; transition:width .3s ease}
+.area{font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--accent)}
+h2{font-family:var(--display); font-weight:700; font-size:21px; line-height:1.25; margin:0}
+.opts{display:grid; gap:10px}
+.opt{font:inherit; color:var(--ink); text-align:left; background:var(--surface); border:1.5px solid var(--line); border-radius:12px; padding:13px 16px; cursor:pointer; display:flex; gap:12px; align-items:center; transition:border-color .15s, background .15s}
+.opt:hover{border-color:var(--accent)}
+.opt:focus-visible,.btn:focus-visible,.age:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+.opt.sel{border-color:var(--accent); background:var(--accent-soft)}
+.dot{flex:none; width:18px; height:18px; border-radius:50%; border:2px solid var(--line)}
+.opt.sel .dot{border-color:var(--accent); background:radial-gradient(var(--accent) 45%, transparent 50%)}
+.ages{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px}
+@media (max-width:420px){ .ages{grid-template-columns:1fr} }
+.age{font:inherit; color:var(--ink); text-align:left; background:var(--surface); border:1.5px solid var(--line); border-radius:14px; padding:16px; cursor:pointer; display:flex; flex-direction:column; gap:2px; transition:border-color .15s, background .15s}
+.age:hover{border-color:var(--accent); background:var(--accent-soft)}
+.age b{font-family:var(--display); font-size:20px; line-height:1.2}
+.age span{font-size:14px; color:var(--muted)}
+.age em{font-style:normal; font-size:12px; font-weight:700; color:var(--accent); margin-top:4px}
+.nav{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap}
+.btn{font:inherit; font-weight:700; border-radius:10px; padding:10px 18px; cursor:pointer; border:1.5px solid var(--line); background:transparent; color:var(--ink)}
+.btn.primary{background:var(--accent); border-color:var(--accent); color:#fff}
+.btn:disabled{opacity:.4; cursor:default}
+.res-text{margin:0}
+h3{font-family:var(--display); font-size:18px; margin:0}
+.note{font-size:13px; color:var(--muted); margin:0}
+/* profil kecerdasan */
+.profile{display:grid; gap:9px; margin:0; padding:0; list-style:none}
+.profile li{display:grid; grid-template-columns:minmax(0,150px) 1fr 42px; gap:10px; align-items:center; font-size:14px}
+.profile .pname{font-weight:600; line-height:1.25}
+.profile li.top .pname{font-weight:700}
+.profile .ptrack{height:12px; background:var(--accent-soft); border-radius:99px; overflow:hidden}
+.profile .pfill{display:block; height:100%; border-radius:99px; background:var(--bar-muted); transition:width .6s ease}
+.profile li.top .pfill{background:var(--accent)}
+.profile .pval{text-align:right; font-variant-numeric:tabular-nums; color:var(--muted); font-size:13px}
+@media (max-width:420px){ .profile li{grid-template-columns:minmax(0,110px) 1fr 38px} }
+/* kartu kecerdasan menonjol */
+.intel{border:1.5px solid var(--line); border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:10px}
+.intel .rank{font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--accent)}
+.intel h4{font-family:var(--display); font-size:19px; line-height:1.2; margin:0}
+.intel h4 small{font-family:var(--body); font-size:14px; font-weight:600; color:var(--muted)}
+.intel p{margin:0}
+.intel .sub{font-weight:700; font-size:14px; margin-top:2px}
+.tips{display:grid; gap:10px; margin:0; padding:0; list-style:none}
+.tips li{border-left:4px solid var(--good); padding:2px 0 2px 12px}
+.tokoh{background:var(--accent-soft); border-radius:10px; padding:10px 12px; font-size:14.5px}
+.tip-ref{display:block; margin-top:4px; font-size:12.5px; color:var(--muted)}
+.principle{border-left:4px solid var(--warn); padding:4px 0 4px 14px}
+.principle p{margin:0}
+.warnbox{background:#fbf3e2; border-radius:10px; padding:10px 12px; font-size:14.5px; margin:0}
+.refs{margin:0; padding-left:18px; display:grid; gap:6px; font-size:12.5px; color:var(--muted)}
+.refs em{font-style:italic}
+details.ref-box{border-top:1px solid var(--line); padding-top:12px}
+details.ref-box summary{cursor:pointer; font-weight:700; font-size:14px; color:var(--ink)}
+details.ref-box summary:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+details.ref-box .refs{margin-top:10px}
+footer.site{max-width:640px; margin:8px auto 0; text-align:center; font-size:13px; color:var(--muted)}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header id="top">
+    <div class="eyebrow" id="eyebrow">Untuk orang tua dan keluarga</div>
+    <h1>Cek Minat Bakat</h1>
+    <p class="lead" id="lead"></p>
+  </header>
+
+  <section class="card" id="start" aria-live="polite">
+    <h2>Pilih kelompok usia</h2>
+    <p class="note">Untuk balita sampai remaja, kuis diisi oleh orang tua. Untuk usia 18 tahun ke atas, kuis diisi sendiri.</p>
+    <div class="ages" id="ages"></div>
+  </section>
+
+  <section class="card" id="quiz" hidden aria-live="polite">
+    <div class="progress"><span id="count">1 / 24</span><div class="bar"><span id="fill" style="width:4.2%"></span></div></div>
+    <div class="area" id="area"></div>
+    <h2 id="q"></h2>
+    <div class="opts" id="opts" role="radiogroup"></div>
+    <div class="nav">
+      <button class="btn" id="back" type="button">← Kembali</button>
+      <button class="btn primary" id="next" type="button" disabled>Lanjut →</button>
+    </div>
+  </section>
+
+  <section class="card" id="result" hidden aria-live="polite">
+    <div class="area" id="res-group"></div>
+    <h2 id="res-title"></h2>
+    <p class="res-text" id="res-text"></p>
+
+    <h3>Profil kecerdasan</h3>
+    <ul class="profile" id="profile"></ul>
+    <p class="warnbox" id="flat-note" hidden></p>
+
+    <h3 id="top-title">Cara mengasah kecerdasan yang menonjol</h3>
+    <div id="top-list" style="display:grid; gap:14px"></div>
+
+    <h3>Prinsip umum mengasah bakat</h3>
+    <div class="principle"><p id="principle"></p><small class="tip-ref" id="principle-ref"></small></div>
+
+    <p class="note" id="low-note"></p>
+
+    <details class="ref-box" id="ref-box">
+      <summary>Daftar rujukan</summary>
+      <ol class="refs" id="ref-list"></ol>
+    </details>
+    <p class="note" id="res-note"></p>
+    <p class="note" id="mi-note"></p>
+    <div class="nav">
+      <button class="btn" id="change" type="button">Ganti usia</button>
+      <button class="btn primary" id="again" type="button">Ulangi kuis</button>
+    </div>
+  </section>
+</div>
+<footer class="site">© monkdigital · Cek Minat Bakat</footer>
+
+<script>
+// ---------- 8 JENIS KECERDASAN (Gardner) ----------
+var INTEL_ORDER = ["lin","log","spa","mus","kin","inter","intra","nat"];
+var INTEL = {
+  lin:{name:"Linguistik", alias:"Cerdas kata",
+    desc:"Kepekaan terhadap bahasa: senang membaca, bercerita, menulis, dan menyusun kata untuk menyampaikan gagasan.",
+    tokoh:"Gardner menjadikan penyair T.S. Eliot contoh kecerdasan ini. Dari Indonesia: Pramoedya Ananta Toer (novelis) dan Najwa Shihab (jurnalis, pernah menjadi Duta Baca Indonesia).",
+    tokohRefs:["gardner1993"]},
+  log:{name:"Logis-matematis", alias:"Cerdas angka & logika",
+    desc:"Kemampuan bernalar, mengenali pola, berhitung, dan memecahkan masalah secara runtut.",
+    tokoh:"Contoh Gardner: Albert Einstein. Dari Indonesia: B.J. Habibie, insinyur dirgantara yang dikenal lewat perhitungan perambatan retak pada struktur pesawat.",
+    tokohRefs:["gardner1993"]},
+  spa:{name:"Visual-spasial", alias:"Cerdas gambar & ruang",
+    desc:"Kemampuan membayangkan bentuk, ruang, dan warna: menggambar, merancang, membaca peta, dan membangun.",
+    tokoh:"Contoh Gardner: pelukis Pablo Picasso. Dari Indonesia: pelukis Raden Saleh dan Affandi.",
+    tokohRefs:["gardner1993"]},
+  mus:{name:"Musikal", alias:"Cerdas musik",
+    desc:"Kepekaan terhadap nada, irama, dan bunyi: senang bernyanyi, bermain alat musik, dan mudah mengingat melodi.",
+    tokoh:"Contoh Gardner: komponis Igor Stravinsky. Dari Indonesia: W.R. Supratman (pencipta “Indonesia Raya”) dan Addie MS (komponis dan konduktor). Shinichi Suzuki, pendidik musik dari Jepang, menunjukkan bahwa kemampuan musik tumbuh dari lingkungan yang mendukung sejak kecil.",
+    tokohRefs:["gardner1993","suzuki"]},
+  kin:{name:"Kinestetik-tubuh", alias:"Cerdas gerak",
+    desc:"Kemampuan memakai tubuh dan tangan secara terampil: olahraga, menari, membuat, dan memperbaiki sesuatu.",
+    tokoh:"Contoh Gardner: penari Martha Graham. Dari Indonesia: Susi Susanti (peraih medali emas Olimpiade 1992) dan penari Didik Nini Thowok.",
+    tokohRefs:["gardner1993"]},
+  inter:{name:"Interpersonal", alias:"Cerdas bergaul",
+    desc:"Kemampuan memahami orang lain, bekerja sama, memimpin, dan menengahi perbedaan.",
+    tokoh:"Contoh Gardner: Mahatma Gandhi. Dari Indonesia: Ki Hajar Dewantara, pendiri Taman Siswa, yang membangun gerakan pendidikan lewat kemampuannya menggerakkan orang.",
+    tokohRefs:["gardner1993"]},
+  intra:{name:"Intrapersonal", alias:"Cerdas diri",
+    desc:"Kemampuan mengenal diri sendiri: perasaan, kekuatan, kelemahan, dan tujuan hidup, lalu mengarahkan diri.",
+    tokoh:"Contoh: psikiater Viktor Frankl, yang menulis tentang makna hidup dari pengalamannya sendiri. Dari Indonesia: R.A. Kartini, yang merenungkan pikiran dan cita-citanya lewat surat-surat yang kemudian dibukukan sebagai “Habis Gelap Terbitlah Terang”.",
+    tokohRefs:["gardner1999","frankl"]},
+  nat:{name:"Naturalis", alias:"Cerdas alam",
+    desc:"Kepekaan terhadap alam: mengenali, membedakan, dan merawat tumbuhan, hewan, serta lingkungan.",
+    tokoh:"Contoh Gardner: Charles Darwin. Dekat dengan Indonesia: Alfred Russel Wallace, yang meneliti satwa Nusantara dan menemukan Garis Wallace, serta Biruté Galdikas, peneliti orangutan di Kalimantan.",
+    tokohRefs:["gardner1999","wallace"]}
+};
+
+var NOTE_CHILD = "Kuis ini alat refleksi untuk mengenali kecenderungan minat dan bakat, bukan tes psikologi atau tes IQ. Setiap anak memiliki semua jenis kecerdasan dalam kadar yang berbeda, dan profilnya bisa berubah seiring pengalaman. Untuk pemetaan bakat yang lebih mendalam, konsultasikan dengan psikolog pendidikan atau guru BK.";
+var NOTE_ADULT = "Kuis ini alat refleksi untuk mengenali kecenderungan minat dan bakat, bukan tes psikologi atau tes IQ. Setiap orang memiliki semua jenis kecerdasan dalam kadar yang berbeda. Untuk pemetaan karier yang lebih mendalam, pertimbangkan asesmen dengan psikolog.";
+
+// Q: 3 pernyataan per kecerdasan. Urutan tampil diselang-seling otomatis.
+var GROUPS = {
+  balita: {
+    label:"Balita", range:"0–5 tahun", who:"Diisi orang tua",
+    eyebrow:"Untuk orang tua · anak usia 0–5 tahun", prompt:"Seberapa sesuai dengan si kecil?",
+    note:NOTE_CHILD + " Untuk anak di bawah 2 tahun, minat masih sangat cair, sehingga hasilnya lebih bermakna untuk usia 2–5 tahun.",
+    subject:"si kecil",
+    Q:{
+      lin:["Si kecil senang dibacakan buku atau mendengar cerita, dan sering minta diulang.",
+           "Si kecil cepat menirukan kata baru, lirik lagu, atau kalimat dari cerita.",
+           "Si kecil suka bercerita atau “mengobrol” panjang dengan caranya sendiri."],
+      log:["Si kecil suka mengelompokkan atau mengurutkan benda, misalnya menurut warna atau ukuran.",
+           "Si kecil tertarik pada angka atau senang menghitung benda di sekitarnya.",
+           "Si kecil sering bertanya “kenapa?” atau mencoba-coba untuk melihat apa yang terjadi."],
+      spa:["Si kecil senang mencoret-coret, menggambar, atau mewarnai.",
+           "Si kecil asyik menyusun balok, lego, atau puzzle.",
+           "Si kecil mudah mengingat letak benda atau jalan menuju tempat yang sering dikunjungi."],
+      mus:["Si kecil langsung bergoyang atau ikut bersenandung saat mendengar musik.",
+           "Si kecil cepat hafal lagu beserta nadanya.",
+           "Si kecil senang membuat bunyi berirama dengan benda, misalnya mengetuk panci atau bertepuk tangan."],
+      kin:["Si kecil sangat aktif bergerak: berlari, memanjat, melompat.",
+           "Si kecil cekatan memakai tangannya, misalnya memungut benda kecil atau meronce.",
+           "Si kecil cepat meniru gerakan, misalnya gerakan tari atau senam."],
+      inter:["Si kecil senang bermain bersama anak lain atau orang dewasa yang dikenalnya.",
+           "Si kecil peka saat orang lain sedih, misalnya mendekat atau memeluk.",
+           "Si kecil suka mengajak orang lain ikut bermain atau mau berbagi mainan."],
+      intra:["Si kecil bisa asyik bermain sendiri cukup lama dengan tenang.",
+           "Si kecil mulai bisa mengatakan apa yang ia rasakan atau inginkan (misalnya “aku sedih”, “aku mau itu”).",
+           "Si kecil punya kesukaan yang jelas dan teguh dengan pilihannya."],
+      nat:["Si kecil tertarik pada hewan, serangga, atau tanaman.",
+           "Si kecil senang bermain di luar dengan tanah, air, pasir, atau dedaunan.",
+           "Si kecil suka mengumpulkan benda alam (batu, daun, bunga) atau memperhatikan perbedaannya."]
+    }
+  },
+
+  sd: {
+    label:"Anak SD", range:"6–12 tahun", who:"Diisi orang tua",
+    eyebrow:"Untuk orang tua · anak usia 6–12 tahun", prompt:"Seberapa sesuai dengan anak Anda?",
+    note:NOTE_CHILD, subject:"anak Anda",
+    Q:{
+      lin:["Anak senang membaca buku atau komik di waktu luangnya.",
+           "Anak pandai bercerita, menjelaskan, atau mengemukakan alasan dengan kata-kata.",
+           "Anak suka menulis (cerita, buku harian) atau bermain tebak kata dan pantun."],
+      log:["Anak menikmati pelajaran matematika atau permainan berhitung.",
+           "Anak suka teka-teki, permainan strategi (catur, congklak, sudoku), atau mencari pola.",
+           "Anak senang bereksperimen atau ingin tahu cara kerja sesuatu."],
+      spa:["Anak suka menggambar, melukis, atau membuat kerajinan.",
+           "Anak senang membangun sesuatu (lego, maket, rumah-rumahan) atau membongkar-pasang barang.",
+           "Anak mudah membaca peta atau denah, atau mengingat rute jalan."],
+      mus:["Anak senang bernyanyi atau sering bersenandung.",
+           "Anak tertarik belajar alat musik atau cepat menangkap nada.",
+           "Anak peka terhadap bunyi: cepat mengenali lagu, nada sumbang, atau irama."],
+      kin:["Anak menyukai olahraga, menari, atau permainan fisik.",
+           "Anak lebih cepat paham jika langsung mempraktikkan daripada hanya mendengar penjelasan.",
+           "Anak terampil dengan tangan: membuat prakarya, merakit, atau memperbaiki sesuatu."],
+      inter:["Anak mudah berteman dan disukai teman-temannya.",
+           "Anak sering menjadi penengah atau pemimpin saat bermain berkelompok.",
+           "Anak peka terhadap perasaan teman dan suka membantu."],
+      intra:["Anak bisa menjelaskan apa yang ia rasakan dan mengapa.",
+           "Anak punya cita-cita atau minat sendiri, bukan sekadar ikut-ikutan teman.",
+           "Anak suka menyendiri sejenak untuk berpikir, membaca, atau mengerjakan proyeknya sendiri."],
+      nat:["Anak senang memelihara hewan atau merawat tanaman.",
+           "Anak suka menonton atau membaca tentang hewan, tumbuhan, dan alam.",
+           "Anak suka mengamati dan menggolongkan hal di sekitarnya (jenis burung, daun, batu, serangga)."]
+    }
+  },
+
+  remaja: {
+    label:"Remaja", range:"13–17 tahun", who:"Diisi orang tua",
+    eyebrow:"Untuk orang tua · anak usia 13–17 tahun", prompt:"Seberapa sesuai dengan remaja Anda?",
+    note:NOTE_CHILD, subject:"remaja Anda",
+    Q:{
+      lin:["Remaja Anda gemar membaca, menulis, atau mengikuti diskusi.",
+           "Remaja Anda pandai menyampaikan pendapat dengan kata-kata, baik lisan maupun tulisan.",
+           "Remaja Anda menikmati pelajaran bahasa atau belajar bahasa asing."],
+      log:["Remaja Anda menyukai matematika, sains, atau pemrograman.",
+           "Remaja Anda suka memecahkan masalah secara bertahap dan logis.",
+           "Remaja Anda kritis: menanyakan bukti dan alasan sebelum memercayai sesuatu."],
+      spa:["Remaja Anda tertarik pada desain, menggambar, fotografi, atau video.",
+           "Remaja Anda mudah membayangkan bentuk benda dari berbagai sudut atau memahami diagram.",
+           "Remaja Anda suka merancang, misalnya tata ruang, pakaian, atau tampilan sebuah karya."],
+      mus:["Remaja Anda bermain alat musik, bernyanyi, atau membuat musik.",
+           "Remaja Anda mudah mengingat lagu atau mengenali alat musik dalam sebuah lagu.",
+           "Musik menjadi bagian penting kesehariannya, misalnya untuk menenangkan diri atau berkarya."],
+      kin:["Remaja Anda aktif berolahraga, menari, atau berlatih bela diri.",
+           "Remaja Anda punya koordinasi gerak yang baik dan cepat menguasai gerakan baru.",
+           "Remaja Anda menikmati pekerjaan tangan: merakit, memasak, menjahit, atau memperbaiki barang."],
+      inter:["Remaja Anda mudah bergaul dan punya banyak teman.",
+           "Remaja Anda sering dipercaya memimpin atau mengatur kegiatan (OSIS, organisasi, komunitas).",
+           "Teman-temannya sering datang untuk bercerita atau meminta pendapatnya."],
+      intra:["Remaja Anda mengenal kekuatan dan kelemahannya sendiri.",
+           "Remaja Anda bisa menetapkan target pribadi dan berusaha mencapainya tanpa banyak disuruh.",
+           "Remaja Anda suka merenung, menulis jurnal, atau memikirkan makna dari pengalamannya."],
+      nat:["Remaja Anda peduli pada lingkungan, hewan, atau isu alam.",
+           "Remaja Anda menikmati biologi, geografi, atau kegiatan alam (berkemah, mendaki, berkebun).",
+           "Remaja Anda pandai mengenali dan membedakan jenis tumbuhan, hewan, atau gejala alam."]
+    }
+  },
+
+  dewasa: {
+    label:"Dewasa", range:"18 tahun ke atas", who:"Diisi sendiri",
+    eyebrow:"Untuk usia 18 tahun ke atas · diisi sendiri", prompt:"Seberapa sesuai dengan diri Anda?",
+    note:NOTE_ADULT, subject:"Anda",
+    Q:{
+      lin:["Saya menikmati membaca, menulis, atau merangkai kata.",
+           "Orang lain menilai saya pandai menjelaskan atau berbicara di depan umum.",
+           "Saya mudah mempelajari istilah baru atau bahasa asing."],
+      log:["Saya menikmati bekerja dengan angka, data, atau analisis.",
+           "Saya suka memecahkan masalah dengan langkah-langkah yang logis dan sistematis.",
+           "Saya tertarik pada cara kerja sesuatu, penemuan ilmiah, atau teknologi."],
+      spa:["Saya mudah membayangkan sesuatu dalam bentuk gambar, peta, atau diagram.",
+           "Saya menikmati menggambar, mendesain, menata ruang, atau fotografi.",
+           "Saya jarang tersesat dan mudah membaca peta atau denah."],
+      mus:["Saya mudah mengingat melodi dan peka terhadap nada atau irama.",
+           "Saya bermain alat musik, bernyanyi, atau pernah serius belajar musik.",
+           "Musik sangat memengaruhi suasana hati dan konsentrasi saya."],
+      kin:["Saya merasa paling bersemangat saat bergerak: olahraga, menari, atau bekerja dengan tangan.",
+           "Saya lebih cepat belajar dengan langsung mencoba daripada membaca petunjuk.",
+           "Saya terampil dalam pekerjaan yang butuh ketelitian tangan (memasak, merakit, kerajinan, memperbaiki)."],
+      inter:["Saya mudah memahami perasaan dan maksud orang lain.",
+           "Saya menikmati bekerja dalam tim, memimpin, atau menengahi perbedaan pendapat.",
+           "Orang sering datang kepada saya untuk meminta pendapat atau bercerita."],
+      intra:["Saya cukup mengenal kekuatan, kelemahan, dan nilai-nilai hidup saya.",
+           "Saya meluangkan waktu untuk merenung, menulis jurnal, atau mengevaluasi diri.",
+           "Saya bisa memotivasi diri sendiri untuk mencapai target pribadi."],
+      nat:["Saya merasa segar dan senang saat berada di alam terbuka.",
+           "Saya suka berkebun, merawat hewan, atau mengamati alam.",
+           "Saya mudah mengenali jenis tanaman, hewan, cuaca, atau perubahan di lingkungan sekitar."]
+    }
+  }
+};
+
+// ---------- SARAN MENGASAH (per usia × kecerdasan) ----------
+var TIPS = {
+  balita:{
+    lin:[{t:"Bacakan buku setiap hari secara dialogis: ajukan pertanyaan terbuka (“Menurutmu dia mau ke mana?”), lalu kembangkan jawaban si kecil. Cara ini terbukti mempercepat perkembangan bahasa.", r:["whitehurst"]},
+         {t:"Ajak bercakap-cakap dua arah sepanjang hari, misalnya saat mandi atau memasak. Percakapan bolak-balik lebih membangun bahasa daripada sekadar mendengar.", r:["romeo"]},
+         {t:"Letakkan buku bergambar di tempat yang mudah dijangkau dan biarkan si kecil memilih sendiri buku yang ingin dibaca.", r:["armstrong"]}],
+    log:[{t:"Mainkan permainan papan bernomor seperti ular tangga. Permainan seperti ini terbukti memperkuat pemahaman angka anak prasekolah.", r:["siegler"]},
+         {t:"Ajak memilah dan mengurutkan benda sehari-hari, misalnya cucian menurut warna atau sendok menurut ukuran.", r:["clements"]},
+         {t:"Jawab pertanyaan “kenapa?” dengan ajakan mencoba: “Coba kita lihat, kalau batu dimasukkan ke air, apa yang terjadi?”", r:["hirshpasek2003"]}],
+    spa:[{t:"Sediakan balok, puzzle, dan bahan menggambar. Bermain balok dan puzzle melatih kemampuan spasial sejak dini.", r:["newcombe"]},
+         {t:"Gunakan kata-kata ruang saat berbicara: atas, bawah, di belakang, lebih besar, berputar. Ini membantu anak berpikir tentang ruang.", r:["newcombe"]},
+         {t:"Ajak menggambar bebas tanpa harus “benar”, lalu minta si kecil menceritakan gambarnya.", r:["armstrong"]}],
+    mus:[{t:"Bernyanyi bersama setiap hari, termasuk lagu daerah dan lagu dengan gerakan.", r:["hallam"]},
+         {t:"Sediakan alat musik sederhana (kecrekan, gendang kecil, botol berisi biji-bijian) untuk menjelajahi bunyi.", r:["armstrong"]},
+         {t:"Perdengarkan musik yang beragam di rumah. Suzuki menekankan bahwa anak menyerap musik seperti menyerap bahasa ibu, yaitu dari lingkungan yang akrab dengannya.", r:["suzuki"]}],
+    kin:[{t:"Beri waktu bergerak aktif yang cukup setiap hari. WHO menganjurkan anak usia 1–4 tahun aktif bergerak minimal 3 jam sehari, tersebar sepanjang hari.", r:["who2019"]},
+         {t:"Latih motorik halus lewat kegiatan sehari-hari: meronce, menuang air, atau memasang kancing sendiri.", r:["ginsburg"]},
+         {t:"Kenalkan banyak jenis gerak (menari, berenang, bersepeda roda tiga). Di usia ini belum perlu fokus pada satu olahraga.", r:["cote"]}],
+    inter:[{t:"Atur waktu bermain bersama anak lain secara rutin, misalnya dengan tetangga atau saudara.", r:["ginsburg"]},
+         {t:"Bantu si kecil mengenali perasaan orang lain: “Adik menangis, mungkin dia sedih. Apa yang bisa kita lakukan?”", r:["gottman"]},
+         {t:"Ajak main peran (pasar-pasaran, dokter-dokteran) untuk berlatih bergiliran dan bekerja sama.", r:["hirshpasek2003"]}],
+    intra:[{t:"Beri nama perasaan si kecil: “Kamu kesal karena menaranya jatuh, ya?” Anak yang perasaannya diberi nama lebih cepat belajar mengenali dirinya.", r:["gottman","siegel"]},
+         {t:"Beri pilihan sederhana setiap hari (baju merah atau biru?) supaya ia belajar mengenali keinginannya sendiri.", r:["siegel"]},
+         {t:"Hormati saat ia asyik bermain sendiri dan jangan buru-buru menginterupsi. Konsentrasi yang tidak terputus adalah awal kemampuan mengarahkan diri.", r:["csikszentmihalyi"]}],
+    nat:[{t:"Ajak bermain di alam secara rutin: taman, kebun, sawah, atau pantai. Kontak dengan alam bermanfaat bagi perkembangan anak.", r:["chawla"]},
+         {t:"Libatkan si kecil merawat tanaman atau hewan sederhana, misalnya menyiram pot miliknya sendiri.", r:["louv"]},
+         {t:"Ajak mengamati dan membandingkan: “Daun ini bentuknya beda dengan yang itu, ya?”", r:["armstrong"]}]
+  },
+  sd:{
+    lin:[{t:"Biarkan anak memilih bacaannya sendiri, termasuk komik. Membaca bebas sesuai minat adalah cara paling efektif menumbuhkan kegemaran membaca. Aplikasi iPusnas dari Perpustakaan Nasional menyediakan buku digital gratis.", r:["krashen"]},
+         {t:"Ajak anak menulis untuk tujuan nyata: surat untuk kakek-nenek, buku harian, atau cerita bergambar buatannya sendiri.", r:["graham"]},
+         {t:"Beri panggung kecil: bercerita di depan keluarga, atau ikut lomba mendongeng dan membaca puisi di sekolah.", r:["armstrong"]}],
+    log:[{t:"Mainkan permainan strategi bersama secara rutin: catur, congklak, sudoku, atau permainan papan.", r:["armstrong"]},
+         {t:"Tekankan bahwa kemampuan matematika tumbuh dengan latihan, dan salah adalah bagian dari belajar.", r:["boaler","dweck"]},
+         {t:"Ajak melakukan percobaan sederhana di rumah dan mencatat hasilnya. Jika anak tertarik, kenalkan pada klub sains atau Olimpiade Sains Nasional (OSN) jenjang SD.", r:["armstrong"]}],
+    spa:[{t:"Sediakan bahan berkarya: buku sketsa, lego, atau kardus bekas untuk membuat maket.", r:["newcombe"]},
+         {t:"Ajak membaca peta saat bepergian atau menggambar denah rumah sendiri.", r:["uttal"]},
+         {t:"Ikutkan kelas menggambar, origami, atau kerajinan. Penelitian menunjukkan kemampuan spasial bisa dilatih dan hasilnya bertahan lama.", r:["uttal"]}],
+    mus:[{t:"Beri kesempatan mencoba beberapa alat musik, termasuk alat musik tradisional seperti angklung atau gamelan, sebelum memilih satu.", r:["hallam","bloom"]},
+         {t:"Jika anak memilih satu alat musik, cari guru yang hangat dan menyenangkan. Di tahap awal, guru yang membuat anak senang belajar lebih penting daripada guru yang paling hebat.", r:["bloom"]},
+         {t:"Dampingi latihan yang singkat tapi rutin, misalnya 15–20 menit setiap hari, dan perdengarkan rekaman lagu yang sedang ia pelajari.", r:["suzuki","ericsson1993"]}],
+    kin:[{t:"Biarkan anak mencoba beragam olahraga dan permainan. Spesialisasi satu cabang terlalu dini justru meningkatkan risiko cedera dan kejenuhan.", r:["cote"]},
+         {t:"Pastikan anak aktif bergerak minimal 60 menit setiap hari, sesuai anjuran WHO.", r:["who2020"]},
+         {t:"Ajak belajar lewat praktik langsung: memasak bersama, prakarya, atau percobaan yang melibatkan tangan.", r:["armstrong"]}],
+    inter:[{t:"Ikutkan kegiatan kelompok seperti Pramuka, tim olahraga, atau kegiatan komunitas. Keterampilan sosial-emosional terbukti bisa dilatih.", r:["durlak"]},
+         {t:"Latih empati dengan bertanya: “Kalau kamu jadi dia, apa yang kamu rasakan?”", r:["gottman"]},
+         {t:"Beri tanggung jawab kecil untuk memimpin, misalnya mengatur giliran bermain atau memimpin rapat keluarga tentang rencana liburan.", r:["goleman"]}],
+    intra:[{t:"Ajak menulis jurnal sederhana, misalnya “hal yang aku pelajari hari ini” atau “perasaanku hari ini”.", r:["zimmerman"]},
+         {t:"Puji usaha dan strateginya, bukan kepintarannya: “Kamu tekun mencoba cara lain.” Pujian seperti ini menumbuhkan pola pikir bertumbuh.", r:["dweck"]},
+         {t:"Bantu anak menetapkan target kecil miliknya sendiri, lalu evaluasi bersama: apa yang berhasil dan apa yang perlu diubah.", r:["zimmerman"]}],
+    nat:[{t:"Ajak berkebun, memelihara hewan, atau membuat kebun kecil di pot.", r:["louv"]},
+         {t:"Kunjungi kebun raya, taman nasional, atau kebun binatang, lalu buat buku catatan pengamatan bersama.", r:["chawla"]},
+         {t:"Kenalkan buku dan tontonan tentang alam, lalu ajak mencocokkannya dengan apa yang ditemui di sekitar rumah.", r:["armstrong"]}]
+  },
+  remaja:{
+    lin:[{t:"Dukung ikut klub debat, jurnalistik sekolah, atau menulis blog. Menulis rutin untuk pembaca nyata mempercepat perkembangan kemampuan menulis.", r:["graham"]},
+         {t:"Sediakan akses bacaan yang luas, termasuk lewat iPusnas, dan ajak berdiskusi tentang buku yang ia baca.", r:["krashen"]},
+         {t:"Jadikan lomba sebagai tujuan latihan, misalnya lomba debat atau menulis tingkat sekolah sampai nasional dari Puspresnas (Pusat Prestasi Nasional).", r:["ericsson2016"]}],
+    log:[{t:"Kenalkan pemrograman, robotika, atau Olimpiade Sains Nasional (OSN). Tantangan yang sedikit di atas kemampuannya membuat belajar terasa mengasyikkan.", r:["csikszentmihalyi"]},
+         {t:"Dorong latihan terarah: kerjakan soal yang sedikit lebih sulit, pelajari kesalahannya, lalu ulangi. Ini inti dari latihan yang membangun keahlian.", r:["ericsson2016"]},
+         {t:"Carikan mentor atau komunitas belajar (klub sains, kursus daring gratis) supaya ia tidak belajar sendirian.", r:["bloom"]}],
+    spa:[{t:"Dukung minat desain, fotografi, atau video lewat proyek nyata, misalnya mendesain poster acara sekolah.", r:["armstrong"]},
+         {t:"Kenalkan perangkat desain grafis atau 3D sederhana. Latihan spasial terbukti meningkatkan kemampuan ini.", r:["uttal"]},
+         {t:"Bantu ia menyusun portofolio karya. Portofolio memperlihatkan perkembangannya dan berguna saat memilih jurusan.", r:["robinson"]}],
+    mus:[{t:"Jika sudah menekuni satu alat musik, carikan guru yang lebih ahli sesuai tahap kemampuannya.", r:["bloom"]},
+         {t:"Dorong tampil: paduan suara, band sekolah, atau Festival Lomba Seni Siswa Nasional (FLS2N).", r:["hallam"]},
+         {t:"Utamakan latihan terarah, bukan sekadar lama latihan: fokus pada bagian yang sulit, rekam, lalu dengarkan kembali.", r:["ericsson1993"]}],
+    kin:[{t:"Jika ia sudah memilih satu cabang, usia remaja adalah saat yang tepat untuk berlatih lebih serius bersama pelatih yang baik.", r:["cote"]},
+         {t:"Jaga keseimbangan latihan, istirahat, dan tidur untuk mencegah cedera dan kejenuhan.", r:["cote","who2020"]},
+         {t:"Kenalkan juga jalur keterampilan tangan seperti tata boga, teknik, atau kriya, termasuk melalui ekstrakurikuler atau pilihan SMK setelah lulus SMP.", r:["armstrong"]}],
+    inter:[{t:"Dukung ikut OSIS, organisasi, atau kegiatan sosial di komunitas.", r:["durlak"]},
+         {t:"Beri kesempatan memimpin proyek nyata, misalnya mengatur acara keluarga atau kegiatan sosial.", r:["goleman"]},
+         {t:"Latih keterampilan mendengar dan menyelesaikan konflik. Program sosial-emosional terbukti meningkatkan keterampilan sosial sekaligus prestasi belajar.", r:["durlak"]}],
+    intra:[{t:"Dorong menulis jurnal reflektif. Menuliskan pikiran dan perasaan membantu memahami diri sendiri.", r:["pennebaker"]},
+         {t:"Ajak menetapkan target, memantau kemajuan, dan mengevaluasi diri secara mandiri.", r:["zimmerman"]},
+         {t:"Saat memilih jurusan, bicarakan minat dan nilai hidupnya, bukan hanya nilai rapor atau tren.", r:["holland","robinson"]}],
+    nat:[{t:"Ajak ikut kegiatan pencinta alam, berkemah, atau program lingkungan di sekolah.", r:["chawla"]},
+         {t:"Kenalkan sains warga (citizen science), misalnya mencatat pengamatan burung di aplikasi Burungnesia atau iNaturalist.", r:["bonney"]},
+         {t:"Hubungkan minatnya dengan jalur ilmu seperti biologi, pertanian, kehutanan, atau kedokteran hewan.", r:["holland"]}]
+  },
+  dewasa:{
+    lin:[{t:"Menulis secara rutin, misalnya blog, catatan harian, atau artikel, lalu minta masukan dari pembaca.", r:["ericsson2016"]},
+         {t:"Jadwalkan waktu membaca setiap hari dan pertimbangkan bergabung dengan klub buku.", r:["krashen"]},
+         {t:"Latih berbicara di depan umum lewat presentasi di tempat kerja atau di komunitas.", r:["ericsson2016"]}],
+    log:[{t:"Ikuti kursus daring analisis data, pemrograman, atau sains.", r:["ericsson2016"]},
+         {t:"Kerjakan masalah atau teka-teki yang menantang secara rutin. Tingkat kesulitan yang pas membuat Anda larut dalam kegiatan (kondisi “flow”).", r:["csikszentmihalyi"]},
+         {t:"Terapkan di pekerjaan: tawarkan diri untuk menganalisis masalah atau memperbaiki alur kerja.", r:["holland"]}],
+    spa:[{t:"Tekuni menggambar sketsa, desain grafis, atau fotografi sebagai kegiatan rutin.", r:["uttal"]},
+         {t:"Gunakan peta pikiran (mind map) dan diagram untuk merangkum ide di pekerjaan.", r:["armstrong"]},
+         {t:"Ambil proyek nyata: menata ruangan, merancang tata letak, atau mendesain materi komunitas.", r:["robinson"]}],
+    mus:[{t:"Mulai atau lanjutkan belajar alat musik. Tidak ada kata terlambat; kemajuan ditentukan oleh cara berlatih.", r:["ericsson2016"]},
+         {t:"Bergabung dengan paduan suara atau kelompok musik di komunitas.", r:["hallam"]},
+         {t:"Berlatih secara terarah: tetapkan target kecil setiap sesi, rekam diri sendiri, dan minta masukan dari guru.", r:["ericsson1993"]}],
+    kin:[{t:"Pilih aktivitas fisik yang Anda nikmati dan jalankan minimal 150 menit per minggu, sesuai anjuran WHO.", r:["who2020"]},
+         {t:"Tekuni keterampilan tangan (memasak, pertukangan, kerajinan) sebagai hobi atau peluang usaha.", r:["robinson"]},
+         {t:"Saat belajar hal baru, pilih pelatihan yang berbasis praktik langsung.", r:["armstrong"]}],
+    inter:[{t:"Ambil peran yang melibatkan orang lain: mentor, fasilitator, relawan, atau pemimpin tim.", r:["goleman"]},
+         {t:"Latih mendengar aktif: dengarkan sampai selesai, ulangi maksudnya dengan kata Anda sendiri, baru tanggapi.", r:["goleman"]},
+         {t:"Pertimbangkan bidang kerja yang berpusat pada orang, seperti pendidikan, konseling, pelayanan, atau kepemimpinan.", r:["holland"]}],
+    intra:[{t:"Tulis jurnal reflektif 15–20 menit beberapa kali seminggu.", r:["pennebaker"]},
+         {t:"Tetapkan target pribadi, pantau kemajuan, dan evaluasi secara berkala.", r:["zimmerman"]},
+         {t:"Kenali nilai dan minat Anda, lalu selaraskan dengan pekerjaan dan kegiatan sehari-hari.", r:["robinson","frankl"]}],
+    nat:[{t:"Luangkan waktu rutin di alam: berjalan di taman, berkebun, atau mendaki.", r:["louv"]},
+         {t:"Ikut sains warga, misalnya mencatat burung di Burungnesia atau mengunggah pengamatan ke iNaturalist.", r:["bonney"]},
+         {t:"Salurkan ke kegiatan nyata seperti urban farming, komunitas lingkungan, atau usaha berbasis tanaman.", r:["holland"]}]
+  }
+};
+
+// Prinsip umum per usia
+var PRINCIPLES = {
+  balita:{t:"Di usia ini, minat ditemukan lewat bermain bebas dan pengalaman yang beragam, bukan latihan formal. Kenalkan banyak hal dan perhatikan kegiatan apa yang membuat si kecil kembali lagi dan lagi. Itulah petunjuk awal minatnya.", r:["bloom","hirshpasek2003","ginsburg"]},
+  sd:{t:"Penelitian Bloom terhadap orang-orang berprestasi menunjukkan bahwa mereka umumnya memulai dari tahap bermain yang menyenangkan bersama guru yang hangat, baru kemudian berlatih serius. Beri kesempatan mencoba beberapa bidang, dan puji usaha anak, bukan bakatnya.", r:["bloom","dweck","cote"]},
+  remaja:{t:"Remaja yang sudah menemukan minatnya membutuhkan latihan terarah, guru yang lebih ahli, dan tujuan yang jelas. Dukungan keluarga tetap menjadi kunci. Ketekunan biasanya tumbuh dari minat yang terus dipupuk, bukan dari paksaan.", r:["bloom","ericsson1993","duckworth"]},
+  dewasa:{t:"Kemampuan tetap bisa diasah di usia dewasa lewat latihan terarah: target yang spesifik, umpan balik, dan sedikit keluar dari zona nyaman. Kemajuan paling bertahan lama ketika kemampuan bertemu dengan minat yang sungguh-sungguh.", r:["ericsson2016","robinson","dweck"]}
+};
+
+// ---------- RUJUKAN ----------
+var REFS = {
+  gardner1983:{short:"Gardner (1983/2011)", full:"Gardner, H. (2011). <em>Frames of mind: The theory of multiple intelligences</em> (edisi ulang tahun ke-30; terbit pertama 1983). New York: Basic Books. (Buku)"},
+  gardner1993:{short:"Gardner (1993)", full:"Gardner, H. (1993). <em>Creating minds: An anatomy of creativity seen through the lives of Freud, Einstein, Picasso, Stravinsky, Eliot, Graham, and Gandhi</em>. New York: Basic Books. (Buku)"},
+  gardner1999:{short:"Gardner (1999)", full:"Gardner, H. (1999). <em>Intelligence reframed: Multiple intelligences for the 21st century</em>. New York: Basic Books. (Buku)"},
+  gardnerMoran:{short:"Gardner & Moran (2006)", full:"Gardner, H., & Moran, S. (2006). The science of multiple intelligences theory: A response to Lynn Waterhouse. <em>Educational Psychologist, 41</em>(4), 227–232."},
+  waterhouse:{short:"Waterhouse (2006)", full:"Waterhouse, L. (2006). Multiple intelligences, the Mozart effect, and emotional intelligence: A critical review. <em>Educational Psychologist, 41</em>(4), 207–225."},
+  armstrong:{short:"Armstrong (2009)", full:"Armstrong, T. (2009). <em>Multiple intelligences in the classroom</em> (3rd ed.). Alexandria, VA: ASCD. (Buku)"},
+  shearer:{short:"Shearer (2004)", full:"Shearer, C. B. (2004). Multiple intelligences theory after 20 years. <em>Teachers College Record, 106</em>(1), 2–16."},
+  bloom:{short:"Bloom (1985)", full:"Bloom, B. S. (Ed.). (1985). <em>Developing talent in young people</em>. New York: Ballantine Books. (Buku)"},
+  ericsson1993:{short:"Ericsson dkk. (1993)", full:"Ericsson, K. A., Krampe, R. T., & Tesch-Römer, C. (1993). The role of deliberate practice in the acquisition of expert performance. <em>Psychological Review, 100</em>(3), 363–406."},
+  ericsson2016:{short:"Ericsson & Pool (2016)", full:"Ericsson, A., & Pool, R. (2016). <em>Peak: Secrets from the new science of expertise</em>. Boston: Houghton Mifflin Harcourt. (Buku)"},
+  dweck:{short:"Dweck (2006)", full:"Dweck, C. S. (2006). <em>Mindset: The new psychology of success</em>. New York: Random House. (Buku)"},
+  duckworth:{short:"Duckworth (2016)", full:"Duckworth, A. (2016). <em>Grit: The power of passion and perseverance</em>. New York: Scribner. (Buku)"},
+  csikszentmihalyi:{short:"Csikszentmihalyi (1990)", full:"Csikszentmihalyi, M. (1990). <em>Flow: The psychology of optimal experience</em>. New York: Harper & Row. (Buku)"},
+  robinson:{short:"Robinson & Aronica (2009)", full:"Robinson, K., & Aronica, L. (2009). <em>The element: How finding your passion changes everything</em>. New York: Viking. (Buku)"},
+  holland:{short:"Holland (1997)", full:"Holland, J. L. (1997). <em>Making vocational choices: A theory of vocational personalities and work environments</em> (3rd ed.). Odessa, FL: Psychological Assessment Resources. (Buku)"},
+  hirshpasek2003:{short:"Hirsh-Pasek & Golinkoff (2003)", full:"Hirsh-Pasek, K., & Golinkoff, R. M. (2003). <em>Einstein never used flash cards: How our children really learn and why they need to play more and memorize less</em>. Emmaus, PA: Rodale. (Buku)"},
+  ginsburg:{short:"Ginsburg (2007)", full:"Ginsburg, K. R. (2007). The importance of play in promoting healthy child development and maintaining strong parent-child bonds. <em>Pediatrics, 119</em>(1), 182–191."},
+  whitehurst:{short:"Whitehurst dkk. (1988)", full:"Whitehurst, G. J., Falco, F. L., Lonigan, C. J., Fischel, J. E., DeBaryshe, B. D., Valdez-Menchaca, M. C., & Caulfield, M. (1988). Accelerating language development through picture book reading. <em>Developmental Psychology, 24</em>(4), 552–559."},
+  romeo:{short:"Romeo dkk. (2018)", full:"Romeo, R. R., Leonard, J. A., Robinson, S. T., West, M. R., Mackey, A. P., Rowe, M. L., & Gabrieli, J. D. E. (2018). Beyond the 30-million-word gap: Children’s conversational exposure is associated with language-related brain function. <em>Psychological Science, 29</em>(5), 700–710."},
+  krashen:{short:"Krashen (2004)", full:"Krashen, S. D. (2004). <em>The power of reading: Insights from the research</em> (2nd ed.). Westport, CT: Libraries Unlimited. (Buku)"},
+  graham:{short:"Graham & Perin (2007)", full:"Graham, S., & Perin, D. (2007). <em>Writing next: Effective strategies to improve writing of adolescents in middle and high schools</em>. Washington, DC: Alliance for Excellent Education."},
+  siegler:{short:"Siegler & Ramani (2008)", full:"Siegler, R. S., & Ramani, G. B. (2008). Playing linear numerical board games promotes low-income children’s numerical development. <em>Developmental Science, 11</em>(5), 655–661."},
+  clements:{short:"Clements & Sarama (2009)", full:"Clements, D. H., & Sarama, J. (2009). <em>Learning and teaching early math: The learning trajectories approach</em>. New York: Routledge. (Buku)"},
+  boaler:{short:"Boaler (2016)", full:"Boaler, J. (2016). <em>Mathematical mindsets: Unleashing students’ potential through creative math, inspiring messages and innovative teaching</em>. San Francisco: Jossey-Bass. (Buku)"},
+  newcombe:{short:"Newcombe & Frick (2010)", full:"Newcombe, N. S., & Frick, A. (2010). Early education for spatial intelligence: Why, what, and how. <em>Mind, Brain, and Education, 4</em>(3), 102–111."},
+  uttal:{short:"Uttal dkk. (2013)", full:"Uttal, D. H., Meadow, N. G., Tipton, E., Hand, L. L., Alden, A. R., Warren, C., & Newcombe, N. S. (2013). The malleability of spatial skills: A meta-analysis of training studies. <em>Psychological Bulletin, 139</em>(2), 352–402."},
+  hallam:{short:"Hallam (2010)", full:"Hallam, S. (2010). The power of music: Its impact on the intellectual, social and personal development of children and young people. <em>International Journal of Music Education, 28</em>(3), 269–289."},
+  suzuki:{short:"Suzuki (1969)", full:"Suzuki, S. (1969). <em>Nurtured by love: A new approach to education</em>. New York: Exposition Press. (Buku)"},
+  cote:{short:"Côté dkk. (2007)", full:"Côté, J., Baker, J., & Abernethy, B. (2007). Practice and play in the development of sport expertise. Dalam G. Tenenbaum & R. C. Eklund (Eds.), <em>Handbook of sport psychology</em> (3rd ed., hlm. 184–202). Hoboken, NJ: Wiley."},
+  who2019:{short:"WHO (2019)", full:"World Health Organization. (2019). <em>Guidelines on physical activity, sedentary behaviour and sleep for children under 5 years of age</em>. Geneva: WHO."},
+  who2020:{short:"WHO (2020)", full:"World Health Organization. (2020). <em>WHO guidelines on physical activity and sedentary behaviour</em>. Geneva: WHO."},
+  durlak:{short:"Durlak dkk. (2011)", full:"Durlak, J. A., Weissberg, R. P., Dymnicki, A. B., Taylor, R. D., & Schellinger, K. B. (2011). The impact of enhancing students’ social and emotional learning: A meta-analysis of school-based universal interventions. <em>Child Development, 82</em>(1), 405–432."},
+  goleman:{short:"Goleman (1995)", full:"Goleman, D. (1995). <em>Emotional intelligence: Why it can matter more than IQ</em>. New York: Bantam Books. (Buku)"},
+  gottman:{short:"Gottman (1997)", full:"Gottman, J. (1997). <em>Raising an emotionally intelligent child: The heart of parenting</em>. New York: Simon & Schuster. (Buku)"},
+  siegel:{short:"Siegel & Bryson (2011)", full:"Siegel, D. J., & Bryson, T. P. (2011). <em>The whole-brain child: 12 revolutionary strategies to nurture your child’s developing mind</em>. New York: Delacorte Press. (Buku)"},
+  zimmerman:{short:"Zimmerman (2002)", full:"Zimmerman, B. J. (2002). Becoming a self-regulated learner: An overview. <em>Theory Into Practice, 41</em>(2), 64–70."},
+  pennebaker:{short:"Pennebaker (1997)", full:"Pennebaker, J. W. (1997). Writing about emotional experiences as a therapeutic process. <em>Psychological Science, 8</em>(3), 162–166."},
+  frankl:{short:"Frankl (1946/2006)", full:"Frankl, V. E. (2006). <em>Man’s search for meaning</em> (terbit pertama 1946). Boston: Beacon Press. (Buku)"},
+  chawla:{short:"Chawla (2015)", full:"Chawla, L. (2015). Benefits of nature contact for children. <em>Journal of Planning Literature, 30</em>(4), 433–452."},
+  louv:{short:"Louv (2005)", full:"Louv, R. (2005). <em>Last child in the woods: Saving our children from nature-deficit disorder</em>. Chapel Hill, NC: Algonquin Books. (Buku)"},
+  bonney:{short:"Bonney dkk. (2009)", full:"Bonney, R., Cooper, C. B., Dickinson, J., Kelling, S., Phillips, T., Rosenberg, K. V., & Shirk, J. (2009). Citizen science: A developing tool for expanding science knowledge and scientific literacy. <em>BioScience, 59</em>(11), 977–984."},
+  wallace:{short:"Wallace (1869)", full:"Wallace, A. R. (1869). <em>The Malay Archipelago</em>. London: Macmillan. (Buku)"}
+};
+
+var BASE_REFS = ["gardner1983","armstrong","shearer","waterhouse","gardnerMoran"];
+var OPTIONS = ["Sangat sesuai","Cukup sesuai","Kurang sesuai","Tidak sesuai"];
+var ORDER = ["balita","sd","remaja","dewasa"];
+var TOP_N = 3;
+var DEFAULT_EYEBROW = "Untuk orang tua dan keluarga";
+var LEAD = "Kenali minat dan bakat anak, remaja, atau diri Anda sendiri berdasarkan 8 jenis kecerdasan menurut teori Kecerdasan Majemuk (Howard Gardner). Pilih usia, jawab 24 pernyataan sesuai keseharian, lalu dapatkan saran cara mengasahnya beserta rujukan akademik. Jawaban tidak disimpan ke mana pun.";
+var MI_NOTE = "Pernyataan disusun berdasarkan deskripsi kecerdasan dalam Gardner (1983/2011) dan Armstrong (2009), dengan pendekatan profil seperti MIDAS (Shearer, 2004). Teori Kecerdasan Majemuk banyak dipakai di dunia pendidikan, tetapi validitas ilmiahnya masih diperdebatkan (Waterhouse, 2006; Gardner & Moran, 2006). Gardner sendiri menekankan bahwa kecerdasan bukan “gaya belajar” dan tidak dimaksudkan untuk melabeli seseorang.";
+
+// Susun urutan pertanyaan diselang-seling: lin1, log1, … nat1, lin2, …
+(function buildQuestions(){
+  for (var key in GROUPS){
+    var grp = GROUPS[key]; grp.key = key; grp.list = [];
+    for (var j=0; j<3; j++){
+      INTEL_ORDER.forEach(function(k){ grp.list.push({intel:k, q:grp.Q[k][j]}); });
+    }
+  }
+})();
+
+var g = null, Q = [], ans = [], i = 0;
+function $(id){ return document.getElementById(id); }
+function toTop(){ try { window.scrollTo(0,0); } catch(e){} }
+function show(id){ ["start","quiz","result"].forEach(function(s){ $(s).hidden = (s !== id); }); toTop(); }
+function shortRefs(keys){ return keys.map(function(k){ return REFS[k].short; }).join("; "); }
+
+function buildAges(){
+  var box = $("ages");
+  ORDER.forEach(function(key){
+    var grp = GROUPS[key];
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "age"; b.id = "age-" + key;
+    var t = document.createElement("b"); t.textContent = grp.label;
+    var r = document.createElement("span"); r.textContent = grp.range;
+    var w = document.createElement("em"); w.textContent = grp.who;
+    b.appendChild(t); b.appendChild(r); b.appendChild(w);
+    b.onclick = function(){ pick(key); };
+    box.appendChild(b);
+  });
+}
+
+function pick(key){
+  g = GROUPS[key]; Q = g.list;
+  ans = Q.map(function(){ return null; }); i = 0;
+  $("eyebrow").textContent = g.eyebrow;
+  render(); show("quiz");
+}
+
+function render(){
+  var item = Q[i];
+  $("count").textContent = (i+1) + " / " + Q.length;
+  $("fill").style.width = ((i+1)/Q.length*100) + "%";
+  $("area").textContent = g.prompt;
+  $("q").textContent = item.q;
+  var box = $("opts"); box.innerHTML = "";
+  OPTIONS.forEach(function(text, k){
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "opt" + (ans[i]===k ? " sel" : "");
+    b.setAttribute("role","radio");
+    b.setAttribute("aria-checked", ans[i]===k ? "true" : "false");
+    var dot = document.createElement("span"); dot.className = "dot";
+    var label = document.createElement("span"); label.textContent = text;
+    b.appendChild(dot); b.appendChild(label);
+    b.onclick = function(){
+      ans[i] = k; render();
+      setTimeout(function(){ if (i < Q.length-1){ i++; render(); } }, 220);
+    };
+    box.appendChild(b);
+  });
+  $("back").textContent = i === 0 ? "← Ganti usia" : "← Kembali";
+  $("next").disabled = ans[i] === null;
+  $("next").textContent = i === Q.length-1 ? "Lihat hasil →" : "Lanjut →";
+}
+
+function showResult(){
+  // Skor per kecerdasan: 3 pernyataan × 0–3 poin = 0–9
+  var score = {}; INTEL_ORDER.forEach(function(k){ score[k] = 0; });
+  Q.forEach(function(item, k){ score[item.intel] += (3 - ans[k]); });
+  var ranked = INTEL_ORDER.map(function(k, idx){ return {k:k, s:score[k], pct:Math.round(score[k]/9*100), idx:idx}; })
+                          .sort(function(a,b){ return (b.s - a.s) || (a.idx - b.idx); });
+  var top = ranked.slice(0, TOP_N);
+  var topKeys = top.map(function(x){ return x.k; });
+
+  var used = [];
+  function useRefs(keys){ keys.forEach(function(k){ if (used.indexOf(k) < 0) used.push(k); }); }
+  function refLine(keys){
+    var r = document.createElement("small"); r.className = "tip-ref";
+    r.textContent = "Rujukan: " + shortRefs(keys); useRefs(keys); return r;
+  }
+
+  $("res-group").textContent = g.label + " · " + g.range;
+  $("res-title").textContent = "Paling menonjol: " + top.map(function(x){ return INTEL[x.k].name; }).join(", ");
+  $("res-text").textContent = "Setiap orang memiliki kedelapan kecerdasan dalam kadar yang berbeda. Grafik di bawah menunjukkan kecenderungan " + g.subject + " saat ini. Tiga kecerdasan teratas adalah titik awal yang baik untuk dipupuk, tanpa menutup kesempatan mencoba bidang lain.";
+
+  // Profil
+  var prof = $("profile"); prof.innerHTML = "";
+  ranked.forEach(function(x){
+    var li = document.createElement("li");
+    if (topKeys.indexOf(x.k) >= 0) li.className = "top";
+    var n = document.createElement("span"); n.className = "pname"; n.textContent = INTEL[x.k].name;
+    var tr = document.createElement("span"); tr.className = "ptrack";
+    var f = document.createElement("span"); f.className = "pfill"; f.style.width = Math.max(3, x.pct) + "%";
+    tr.appendChild(f);
+    var v = document.createElement("span"); v.className = "pval"; v.textContent = x.pct + "%";
+    li.appendChild(n); li.appendChild(tr); li.appendChild(v);
+    li.setAttribute("aria-label", INTEL[x.k].name + ": " + x.pct + " persen");
+    prof.appendChild(li);
+  });
+
+  // Catatan jika profil datar atau semua rendah
+  var fn = $("flat-note");
+  var spread = ranked[0].s - ranked[ranked.length-1].s;
+  if (ranked[0].pct < 50){
+    fn.textContent = "Belum ada kecerdasan yang tampak menonjol. Ini wajar, terutama pada anak, karena minat sering baru terlihat setelah mendapat cukup banyak pengalaman. Perbanyak kesempatan mencoba kegiatan yang beragam, lalu ulangi kuis ini beberapa bulan lagi.";
+    fn.hidden = false;
+  } else if (spread <= 2){
+    fn.textContent = "Skor kedelapan kecerdasan cukup merata. Artinya minatnya luas. Gunakan saran di bawah sebagai titik awal, dan perhatikan kegiatan mana yang paling membuat " + g.subject + " bersemangat.";
+    fn.hidden = false;
+  } else { fn.hidden = true; }
+
+  // Kartu kecerdasan teratas
+  var tl = $("top-list"); tl.innerHTML = "";
+  top.forEach(function(x, n){
+    var d = INTEL[x.k];
+    var card = document.createElement("div"); card.className = "intel";
+    var rk = document.createElement("div"); rk.className = "rank"; rk.textContent = "Peringkat " + (n+1) + " · " + x.pct + "%";
+    var h = document.createElement("h4"); h.textContent = d.name + " ";
+    var sm = document.createElement("small"); sm.textContent = "(" + d.alias + ")"; h.appendChild(sm);
+    var p = document.createElement("p"); p.textContent = d.desc;
+    var sub = document.createElement("div"); sub.className = "sub"; sub.textContent = "Cara mengasah";
+    var ul = document.createElement("ul"); ul.className = "tips";
+    TIPS[g.key][x.k].forEach(function(tip){
+      var li = document.createElement("li");
+      var s = document.createElement("span"); s.textContent = tip.t;
+      li.appendChild(s); li.appendChild(refLine(tip.r));
+      ul.appendChild(li);
+    });
+    var tk = document.createElement("div"); tk.className = "tokoh";
+    var tb = document.createElement("b"); tb.textContent = "Tokoh inspiratif: ";
+    tk.appendChild(tb); tk.appendChild(document.createTextNode(d.tokoh));
+    tk.appendChild(refLine(d.tokohRefs));
+    card.appendChild(rk); card.appendChild(h); card.appendChild(p); card.appendChild(sub); card.appendChild(ul); card.appendChild(tk);
+    tl.appendChild(card);
+  });
+
+  // Prinsip umum
+  var pr = PRINCIPLES[g.key];
+  $("principle").textContent = pr.t;
+  $("principle-ref").textContent = "Rujukan: " + shortRefs(pr.r); useRefs(pr.r);
+
+  $("low-note").textContent = "Kecerdasan dengan skor rendah bukan kelemahan permanen. Sering kali itu karena belum banyak kesempatan mencoba. Kemampuan apa pun bisa berkembang dengan latihan dan dukungan (Dweck, 2006).";
+  useRefs(["dweck"]);
+  useRefs(BASE_REFS);
+
+  var rl = $("ref-list"); rl.innerHTML = "";
+  used.map(function(k){ return REFS[k]; })
+      .sort(function(a,b){ return a.full.localeCompare(b.full); })
+      .forEach(function(r){ var li = document.createElement("li"); li.innerHTML = r.full; rl.appendChild(li); });
+  $("ref-box").open = false;
+  $("res-note").textContent = g.note;
+  $("mi-note").textContent = MI_NOTE;
+  show("result");
+}
+
+function backToStart(){
+  g = null; $("eyebrow").textContent = DEFAULT_EYEBROW; show("start");
+}
+
+$("back").onclick = function(){ if (i > 0){ i--; render(); } else { backToStart(); } };
+$("next").onclick = function(){ if (ans[i] === null) return; if (i < Q.length-1){ i++; render(); } else { showResult(); } };
+$("again").onclick = function(){ ans = Q.map(function(){ return null; }); i = 0; render(); show("quiz"); };
+$("change").onclick = backToStart;
+$("lead").textContent = LEAD;
+buildAges();
+</script>
+</body>
+</html>
